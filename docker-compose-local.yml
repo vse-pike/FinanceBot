@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  app_dotnet_local:
+    build:
+      context: .
+      dockerfile: app.Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - BOT_TOKEN=6100238372:AAHIqPcWdluJnHAeQ3QDp0M4ykpCpsA5-Yw
+    networks:
+      - app_dotnet_test_local
+
+networks:
+  app_dotnet_test_local:
