@@ -64,7 +64,7 @@ namespace FinanceBot
             var cancellationToken = cts.Token;
             var receiverOptions = new ReceiverOptions
             {
-                AllowedUpdates = { }, // receive all update types
+                AllowedUpdates = { }
             };
 
             await SetBotCommandsAsync();
