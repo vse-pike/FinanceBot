@@ -3,7 +3,6 @@ using Telegram.Bot.Types;
 
 namespace FinanceBot.Bot.Commands;
 
-public interface IBotCommand
+public interface ICommand
 {
-    Task Execute(Update update, ITelegramBotClient bot);
 }
