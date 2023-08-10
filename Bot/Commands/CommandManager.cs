@@ -9,20 +9,36 @@ public class CommandManager : IEnumerable
 
     public CommandManager()
     {
-        _commands.Add(new Command
-        {
-            Name = "Инициализация бота",
-            Type = CommandType.Execute,
-            CommandPath = "/start",
-            CommandInstance = new StartCommand()
-        });
+        // _commands.Add(new Command
+        // {
+        //     Name = "Инициализация бота",
+        //     Type = CommandType.Execute,
+        //     CommandPath = "/start",
+        //     CommandInstance = new StartCommand()
+        // });
 
         _commands.Add(new Command
         {
-            Name = "Добавить доход",
+            Name = "Добавить доход в список",
             Type = CommandType.Receive,
-            CommandPath = "/add_income",
+            CallBack = "add_income",
             CommandInstance = new AddIncomeCommand()
+        });
+        
+        _commands.Add(new Command
+        {
+            Name = "Изменить доход из списка",
+            Type = CommandType.Receive,
+            CallBack = "change_income",
+            CommandInstance = new ChangeIncomeCommand()
+        });
+        
+        _commands.Add(new Command
+        {
+            Name = "Удалить доход из списка",
+            Type = CommandType.Execute,
+            CallBack = "delete_income",
+            CommandInstance = new DeleteIncomeCommand()
         });
         
         // _commands.Add( new Command
@@ -60,21 +76,21 @@ public class CommandManager : IEnumerable
         return _commands;
     }
 
-    public ICommand? GetCommandInstance(string commandPath)
+    // public ICommand? GetCommandInstance(string callBack)
+    // {
+    //     Command command = _commands.FirstOrDefault(c => c.CallBack == callBack);
+    //     return command?.CommandInstance;
+    // }
+
+    public Command? GetCommand(string callBack)
     {
-        Command command = _commands.FirstOrDefault(c => c.CommandPath == commandPath);
-        return command?.CommandInstance;
+        return _commands.FirstOrDefault(c => c.CallBack == callBack);
     }
 
-    public Command? GetCommand(string commandPath)
-    {
-        return _commands.FirstOrDefault(c => c.CommandPath == commandPath);
-    }
-
-    public Command? GetCommandByName(string commandName)
-    {
-        return _commands.FirstOrDefault(c => c.Name == commandName);
-    }
+    // public Command? GetCommandByName(string commandName)
+    // {
+    //     return _commands.FirstOrDefault(c => c.Name == commandName);
+    // }
 
     IEnumerator IEnumerable.GetEnumerator()
     {

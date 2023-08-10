@@ -1,4 +1,5 @@
 using FinanceBot.DbSettings;
+using FinanceBot.DbSettings.ORM;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using User = FinanceBot.DbSettings.ORM.User;
@@ -14,11 +15,11 @@ public class StartCommand : ICommand, IExecuteCommand
         try
         {
             await AddNewUserToDb(update, db);
-            await CreateKeyboard(update, bot);
+            await CreateMenuKeyboard(update, bot);
         }
         catch (Exception e)
         {
-            Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(e));
+            Logger.Log(LoggLevel.ERROR, e);
         }
     }
 
@@ -34,16 +35,17 @@ public class StartCommand : ICommand, IExecuteCommand
 
             db.Users.Add(user);
             await db.SaveChangesAsync();
-            Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(user));
+            Logger.Log(LoggLevel.INFO, user);
         }
     }
 
-    private async Task CreateKeyboard(Update update, ITelegramBotClient bot)
+    private async Task CreateMenuKeyboard(Update update, ITelegramBotClient bot)
     {
-        CommandManager commandManager = new();
-        List<Command> commands = commandManager.GetAllCommands();
-        InlineKeyboardMarkup keyboard = Keyboard.GetKeyboardMarkup(commands);
+        var menuButtons = new MenuManager().GetAllButtons();
+        InlineKeyboardMarkup keyboard = Keyboard.GetKeyboardMarkup(menuButtons, button => button.Name, button => button.CallBack);
         
-        await bot.SendTextMessageAsync(update.Message!.Chat, "Привет, это пример с кнопкой!", replyMarkup: keyboard);
+        //TODO: Добавить текст
+        await bot.SendTextMessageAsync(update.Message!.Chat, "Меню команд:", replyMarkup: keyboard);
+        Logger.Log(LoggLevel.INFO, keyboard);
     }
 }
